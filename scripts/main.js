@@ -98,14 +98,7 @@ $(document).ready(function() {
   // 6. FAQ accordion
   $('.faq-toggle').on('click', function() {
     const item = $(this).closest('.faq-item');
-    const answer = item.find('.faq-answer');
     const isOpen = item.attr('data-open') === 'true';
-
-    if (isOpen) {
-      answer.css('max-height', 0);
-    } else {
-      answer.css('max-height', answer.prop('scrollHeight') + 'px');
-    }
     item.attr('data-open', String(!isOpen));
   });
 

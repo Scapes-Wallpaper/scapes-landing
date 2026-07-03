@@ -5,68 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scapes - Aesthetic Desktop & Mobile Wallpapers</title>
   <meta name="description" content="Discover, manage, and set stunning minimalist and cyberpunk wallpapers for your Desktop and Mobile devices.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="styles/output.css">
+  <link rel="icon" href="favicon.ico" type="image/png">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
-<body class="antialiased overflow-x-hidden selection:bg-scapes-light-accent selection:text-white dark:selection:bg-scapes-dark-accent">
-  
+<body class="antialiased overflow-x-hidden selection:bg-scapes-light-accent selection:text-white dark:selection:bg-scapes-dark-accent theme-transition">
+
   <!-- Navigation -->
-  <nav class="fixed w-full z-50 transition-shadow duration-300" id="navbar">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center glass-panel rounded-b-2xl md:rounded-b-3xl mt-0 md:mt-2 md:mx-4 lg:mx-auto">
-      <a href="#" class="flex items-center gap-2">
-        <!-- Mobile Logo (Icon only) -->
-        <img src="assets/logo/scapes.png" alt="Scapes Logo" class="h-8 block md:hidden">
-        <!-- Desktop Logo (With text) -->
-        <img src="assets/logo/scapes_dark.png" alt="Scapes Logo" class="h-10 md:h-14 hidden md:dark:block" id="logo-dark">
-        <img src="assets/logo/scapes_light.png" alt="Scapes Logo" class="h-10 md:h-14 hidden md:block md:dark:hidden" id="logo-light">
-      </a>
-      
-      <div class="flex items-center gap-6">
-        <a href="#features" class="hidden md:block text-sm font-medium hover:text-scapes-light-accent dark:hover:text-scapes-dark-accent">Features</a>
-        <a href="#sneak-peek" class="hidden md:block text-sm font-medium hover:text-scapes-light-accent dark:hover:text-scapes-dark-accent">Preview</a>
-        <a href="https://contributor.scapes.my.id" class="hidden md:block text-sm font-medium hover:text-scapes-light-accent dark:hover:text-scapes-dark-accent">For Contributors</a>
-        
-        <button id="themeToggle" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10" aria-label="Toggle Theme">
-          <svg class="w-5 h-5 hidden dark:block text-scapes-dark-highlight" fill="currentColor" viewBox="0 0 20 20">
-            <!-- Moon -->
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-          </svg>
-          <svg class="w-5 h-5 block dark:hidden text-scapes-light-highlight" fill="currentColor" viewBox="0 0 20 20">
-            <!-- Sun -->
-            <path d="M10 2a1 1 0 011 1v2a1 1 0 11-2 0V3a1 1 0 011-1zM4.22 4.22a1 1 0 011.414 0l1.414 1.414a1 1 0 11-1.414 1.414L4.22 5.636a1 1 0 010-1.414zm11.314 0a1 1 0 010 1.414l-1.414 1.414a1 1 0 11-1.414-1.414l1.414-1.414a1 1 0 011.414 0zM10 8a2 2 0 100 4 2 2 0 000-4zm0-1a1 1 0 011 1v2a1 1 0 11-2 0V8a1 1 0 011-1z"></path>
-          </svg>
-        </button>
+  <nav class="fixed w-full z-50 transition-[margin,box-shadow] duration-300" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="flex justify-between items-center glass-panel rounded-2xl md:rounded-3xl px-4 md:px-6 py-3 md:py-4 mt-0 md:mt-3">
+        <a href="#" class="flex items-center gap-2 shrink-0">
+          <img src="assets/logo/scapes.png" alt="Scapes Logo" class="h-8 block md:hidden">
+          <img src="assets/logo/scapes_dark.png" alt="Scapes Logo" class="h-10 md:h-12 hidden md:dark:block">
+          <img src="assets/logo/scapes_light.png" alt="Scapes Logo" class="h-10 md:h-12 hidden md:block md:dark:hidden">
+        </a>
+
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#features" class="nav-link text-sm font-medium">Features</a>
+          <a href="#how-it-works" class="nav-link text-sm font-medium">How it Works</a>
+          <a href="#preview" class="nav-link text-sm font-medium">Preview</a>
+          <a href="#faq" class="nav-link text-sm font-medium">FAQ</a>
+          <a href="https://contributor.scapes.my.id" class="nav-link text-sm font-medium">For Contributors</a>
+        </div>
+
+        <div class="flex items-center gap-2 w-16 md:w-auto rounded-full">
+          <button id="themeToggle" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-300" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon text-lg opacity-70"></i>
+            <i class="fa-solid fa-sun text-lg opacity-70"></i>
+          </button>
+          <button id="mobileMenuToggle" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-300 md:hidden" aria-label="Toggle Menu" aria-expanded="false">
+            <svg class="w-5 h-5" id="menuIconOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg class="w-5 h-5 hidden" id="menuIconClose" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Sheet -->
+      <div id="mobileMenu" class="md:hidden glass-panel mt-2 rounded-2xl overflow-hidden">
+        <div>
+          <div class="flex flex-col px-6 py-4 gap-4">
+            <a href="#features" class="text-sm font-medium py-1">Features</a>
+            <a href="#how-it-works" class="text-sm font-medium py-1">How it Works</a>
+            <a href="#preview" class="text-sm font-medium py-1">Preview</a>
+            <a href="#faq" class="text-sm font-medium py-1">FAQ</a>
+            <a href="https://contributor.scapes.my.id" class="text-sm font-medium py-1">For Contributors</a>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
 
   <!-- Hero Section -->
   <header class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <!-- Dynamic Background Carousel Container -->
-    <div id="hero-bg-carousel" class="absolute inset-0 z-0 bg-black">
-      <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[var(--color-base)] z-10"></div>
+    <!-- Dynamic Background Carousel Container. On scapes.my.id this is populated live;
+         locally/off-domain the browser blocks the fetch via CORS, so the animated
+         gradient-mesh fallback below is what renders instead. -->
+    <div id="hero-bg-carousel" class="absolute inset-0 z-0 gradient-mesh">
+      <div class="orb w-[28rem] h-[28rem] bg-scapes-dark-primary/30 -top-32 -left-20 animate-float-slow"></div>
+      <div class="orb w-[24rem] h-[24rem] bg-scapes-dark-highlight/20 bottom-0 right-0 animate-float"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-[var(--color-base)] z-10"></div>
     </div>
-    
+
     <div class="relative z-10 text-center px-6 max-w-4xl mx-auto animate-slide-up mt-20">
-      <span class="inline-block py-1 px-3 rounded-full glass-panel text-xs font-semibold uppercase tracking-wider mb-6 text-white border-white/20">
-        Desktop & Mobile Wallpaper Engine
-      </span>
       <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-white drop-shadow-lg leading-tight">
         Elevate Your Screen.<br>
         <span class="text-gradient drop-shadow-none">Effortlessly.</span>
       </h1>
       <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow-md">
-        Discover, manage, and instantly apply breathtaking wallpapers curated from top creators. Experience seamless customization across all your devices.
+        Discover, manage, and instantly apply breathtaking wallpapers curated from Scapes. Experience seamless customization across all devices.
       </p>
-      
+
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#download-windows" class="group relative px-8 py-4 bg-white text-black font-semibold rounded-xl overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-3">
+        <a href="https://github.com/Scapes-Wallpaper/scapes-app/releases/download/v1.0.0/Scapes-1.0.0.exe" class="btn-shine group relative px-8 py-4 bg-white text-black font-semibold rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_35px_rgba(255,255,255,0.55)] transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-3">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M0,0H11.37V11.37H0ZM12.62,0H24V11.37H12.62ZM0,12.62H11.37V24H0ZM12.62,12.62H24V24H12.62Z"/>
           </svg>
           Download for Windows
         </a>
-        <a href="#download-android" class="group relative px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-3">
+        <a href="https://github.com/Scapes-Wallpaper/scapes-app/releases/download/v1.0.0/Scapes-1.0.0.apk" class="group relative px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-3">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.523 15.3414c-.051.2721-.299.4795-.5792.4795H7.054c-.2802 0-.5282-.2074-.5792-.4795L5.7533 11.51H3.636V9.458h16.7265v2.052h-2.1173l-.7222 3.8314zM15.462 7.152l1.6212-2.808c.0706-.1224.029-.2786-.0936-.3492-.1226-.0706-.2787-.029-.3493.0936l-1.642 2.844c-1.3962-.6402-2.969-.6402-4.3652 0l-1.642-2.844c-.0706-.1226-.2267-.1642-.3493-.0936-.1226.0706-.1642.2268-.0936.3492l1.6212 2.808C6.9372 8.679 4.3956 12.358 3.52 16.6573c0 .0346-.0084.0725-.0084.107 0 1.25.96 2.2662 2.1465 2.2662h12.6845c1.1865 0 2.1465-1.016 2.1465-2.2662 0-.0345-.0085-.0724-.0085-.107-.8757-4.2992-3.4172-7.9782-6.6493-9.5053zM8.3475 12.5936c-.636 0-1.1517-.5157-1.1517-1.1518 0-.636.5157-1.1517 1.1517-1.1517.636 0 1.1517.5157 1.1517 1.1517 0 .636-.5157 1.1518-1.1517 1.1518zm7.303 0c-.636 0-1.1517-.5157-1.1517-1.1518 0-.636.5157-1.1517 1.1517-1.1517.636 0 1.1517.5157 1.1517 1.1517 0 .636-.5157 1.1518-1.1517 1.1518z"/>
           </svg>
@@ -74,37 +92,64 @@
         </a>
       </div>
     </div>
+
+    <a href="#features" class="nav-link absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/70 hover:text-white transition-colors duration-300 animate-float" aria-label="Scroll to features">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+    </a>
   </header>
 
+  <!-- Trusted Sources Strip -->
+  <div class="border-y border-scapes-light-accent/20 dark:border-scapes-dark-accent/20 py-6 bg-scapes-light-accent/5 dark:bg-scapes-dark-accent/5">
+    <div class="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+      <span class="font-medium uppercase tracking-wider text-xs opacity-70">Powered by wallpapers from</span>
+      <a href="https://contributor.scapes.my.id" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity duration-300">
+        <span class="font-heading font-semibold text-sm">Scapes Community</span>
+      </a>
+      <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity duration-300">
+        <img src="assets/logo/pexels_dark.png" alt="Pexels" class="h-4 md:h-5 hidden dark:block">
+        <img src="assets/logo/pexels_light.png" alt="Pexels" class="h-4 md:h-5 block dark:hidden">
+      </a>
+      <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity duration-300">
+        <img src="assets/logo/unsplash_dark.png" alt="Unsplash" class="h-4 md:h-5 hidden dark:block">
+        <img src="assets/logo/unsplash_light.png" alt="Unsplash" class="h-4 md:h-5 block dark:hidden">
+      </a>
+      <a href="https://pixabay.com" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity duration-300">
+        <img src="assets/logo/pixabay_dark.png" alt="Pixabay" class="h-4 md:h-5 hidden dark:block">
+        <img src="assets/logo/pixabay_light.png" alt="Pixabay" class="h-4 md:h-5 block dark:hidden">
+      </a>
+    </div>
+  </div>
+
   <!-- Features Section -->
-  <section id="features" class="py-24 px-6 max-w-7xl mx-auto">
+  <section id="features" class="relative py-24 px-6 overflow-hidden">
+    <div class="orb w-96 h-96 bg-scapes-light-accent/20 dark:bg-scapes-dark-accent/20 top-0 -right-16"></div>
     <div class="text-center mb-16 opacity-0 translate-y-10 transition-all duration-700 reveal-element">
       <h2 class="text-3xl md:text-5xl font-bold mb-4">Redefining Wallpaper Management</h2>
       <p class="text-lg opacity-80 max-w-2xl mx-auto">Scapes simplifies your workflow, eliminating desktop clutter and saving you time while discovering breathtaking art.</p>
     </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <div class="relative grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
       <!-- Feature 1 -->
-      <div class="bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 p-8 rounded-3xl border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 hover:shadow-xl transition-all duration-300 opacity-0 translate-y-10 reveal-element" style="transition-delay: 100ms;">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-scapes-light-primary to-scapes-light-accent dark:from-scapes-dark-primary dark:to-scapes-dark-accent flex items-center justify-center text-white mb-6">
+      <div class="card-surface card-hover bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 p-8 rounded-3xl border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 hover:shadow-2xl hover:border-scapes-light-accent/60 dark:hover:border-scapes-dark-accent/60 opacity-0 translate-y-10 reveal-element" style="transition-delay: 100ms;">
+        <div class="icon-badge w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-6">
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
         </div>
         <h3 class="text-xl font-bold mb-3">One-Click Apply</h3>
         <p class="opacity-80 leading-relaxed">Instantly set any image as your wallpaper with a single click. No more saving, finding, and applying manually.</p>
       </div>
-      
+
       <!-- Feature 2 -->
-      <div class="bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 p-8 rounded-3xl border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 hover:shadow-xl transition-all duration-300 opacity-0 translate-y-10 reveal-element" style="transition-delay: 200ms;">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-scapes-light-primary to-scapes-light-accent dark:from-scapes-dark-primary dark:to-scapes-dark-accent flex items-center justify-center text-white mb-6">
+      <div class="card-surface card-hover bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 p-8 rounded-3xl border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 hover:shadow-2xl hover:border-scapes-light-accent/60 dark:hover:border-scapes-dark-accent/60 opacity-0 translate-y-10 reveal-element" style="transition-delay: 200ms;">
+        <div class="icon-badge w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-6">
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
         </div>
         <h3 class="text-xl font-bold mb-3">Auto-Organized Storage</h3>
         <p class="opacity-80 leading-relaxed">Say goodbye to hoarding. Scapes automatically categorizes and stores your downloaded wallpapers into neat folders.</p>
       </div>
-      
+
       <!-- Feature 3 -->
-      <div class="bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 p-8 rounded-3xl border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 hover:shadow-xl transition-all duration-300 opacity-0 translate-y-10 reveal-element" style="transition-delay: 300ms;">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-scapes-light-primary to-scapes-light-accent dark:from-scapes-dark-primary dark:to-scapes-dark-accent flex items-center justify-center text-white mb-6">
+      <div class="card-surface card-hover bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 p-8 rounded-3xl border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 hover:shadow-2xl hover:border-scapes-light-accent/60 dark:hover:border-scapes-dark-accent/60 opacity-0 translate-y-10 reveal-element" style="transition-delay: 300ms;">
+        <div class="icon-badge w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-6">
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
         <h3 class="text-xl font-bold mb-3">Smart Discovery</h3>
@@ -113,26 +158,106 @@
     </div>
   </section>
 
-  <!-- Sneak Peek Section -->
-  <section id="sneak-peek" class="py-24 bg-scapes-light-accent/10 dark:bg-scapes-dark-accent/5">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center mb-16 opacity-0 translate-y-10 transition-all duration-700 reveal-element">
-        <h2 class="text-3xl md:text-5xl font-bold mb-4">Experience the Interface</h2>
-        <p class="text-lg opacity-80 max-w-2xl mx-auto">Designed for speed, beauty, and seamless integration on both desktop and mobile platforms.</p>
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="py-24 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-20 opacity-0 translate-y-10 transition-all duration-700 reveal-element">
+      <h2 class="text-3xl md:text-5xl font-bold mb-4">How Scapes Works</h2>
+      <p class="text-lg opacity-80 max-w-2xl mx-auto">From discovery to a freshly dressed screen, in three effortless steps.</p>
+    </div>
+
+    <div class="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+      <div class="hidden md:block absolute top-8 left-[16.66%] right-[16.66%] h-px step-connector"></div>
+
+      <div class="relative text-center opacity-0 translate-y-10 transition-all duration-700 reveal-element" style="transition-delay: 100ms;">
+        <div class="relative z-10 w-16 h-16 mx-auto rounded-2xl icon-badge flex items-center justify-center text-white font-heading font-bold text-xl mb-6">1</div>
+        <h3 class="text-xl font-bold mb-3">Discover</h3>
+        <p class="opacity-80 leading-relaxed max-w-xs mx-auto">Search and browse curated wallpapers, with smart recommendations tailored to your taste.</p>
       </div>
-      
+
+      <div class="relative text-center opacity-0 translate-y-10 transition-all duration-700 reveal-element" style="transition-delay: 250ms;">
+        <div class="relative z-10 w-16 h-16 mx-auto rounded-2xl icon-badge flex items-center justify-center text-white font-heading font-bold text-xl mb-6">2</div>
+        <h3 class="text-xl font-bold mb-3">Apply</h3>
+        <p class="opacity-80 leading-relaxed max-w-xs mx-auto">Set any wallpaper to your desktop or mobile device in a single click. No downloads to manage.</p>
+      </div>
+
+      <div class="relative text-center opacity-0 translate-y-10 transition-all duration-700 reveal-element" style="transition-delay: 400ms;">
+        <div class="relative z-10 w-16 h-16 mx-auto rounded-2xl icon-badge flex items-center justify-center text-white font-heading font-bold text-xl mb-6">3</div>
+        <h3 class="text-xl font-bold mb-3">Enjoy</h3>
+        <p class="opacity-80 leading-relaxed max-w-xs mx-auto">Your folder stays neatly organized automatically, ready whenever you want a change of scenery.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview Section -->
+  <section id="preview" class="relative py-24 bg-scapes-light-accent/10 dark:bg-scapes-dark-accent/5 overflow-hidden">
+    <div class="orb w-[30rem] h-[30rem] bg-scapes-light-primary/10 dark:bg-scapes-dark-primary/10 top-1/2 -translate-y-1/2 -left-40"></div>
+    <div class="relative max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 opacity-0 translate-y-10 transition-all duration-700 reveal-element">
+        <h2 class="text-3xl md:text-5xl font-bold mb-4">Endless Wallpaper Variety</h2>
+        <p class="text-lg opacity-80 max-w-2xl mx-auto">A constantly refreshed library of styles, curated for both desktop and mobile.</p>
+      </div>
+
       <div class="flex flex-col lg:flex-row items-center justify-center gap-12">
         <!-- Desktop Mockup -->
         <div class="w-full lg:w-3/5 relative opacity-0 translate-x-[-30px] transition-all duration-1000 reveal-element">
           <div class="absolute inset-0 bg-gradient-to-r from-scapes-light-primary to-scapes-light-accent dark:from-scapes-dark-primary dark:to-scapes-dark-accent blur-3xl opacity-20 dark:opacity-30 rounded-full"></div>
-          <img src="assets/mockup-desktop.png" alt="Scapes Desktop Interface" class="relative z-10 w-full h-auto rounded-xl shadow-2xl border border-scapes-light-accent/20 dark:border-scapes-dark-accent/20 transform hover:scale-[1.02] transition-transform duration-500">
+          <img src="assets/mockup-desktop.png" alt="Scapes Desktop Interface" class="relative z-10 w-full h-auto rounded-xl shadow-2xl border border-scapes-light-accent/20 dark:border-scapes-dark-accent/20 transform hover:scale-[1.02] transition-transform duration-500 animate-float">
         </div>
-        
+
         <!-- Mobile Mockup -->
         <div class="w-full lg:w-1/4 relative opacity-0 translate-x-[30px] transition-all duration-1000 reveal-element">
           <div class="absolute inset-0 bg-gradient-to-t from-scapes-light-highlight to-scapes-light-primary dark:from-scapes-dark-highlight dark:to-scapes-dark-primary blur-3xl opacity-20 dark:opacity-30 rounded-full"></div>
-          <img src="assets/mockup-mobile.png" alt="Scapes Mobile Interface" class="relative z-10 w-full h-auto rounded-[2.5rem] shadow-2xl border border-scapes-light-accent/20 dark:border-scapes-dark-accent/20 transform hover:scale-[1.05] transition-transform duration-500">
+          <img src="assets/mockup-mobile.png" alt="Scapes Mobile Interface" class="relative z-10 w-full h-auto rounded-[2.5rem] shadow-2xl border border-scapes-light-accent/20 dark:border-scapes-dark-accent/20 transform hover:scale-[1.05] transition-transform duration-500 animate-float-slow">
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-24 px-6 max-w-4xl mx-auto">
+    <div class="text-center mb-16 opacity-0 translate-y-10 transition-all duration-700 reveal-element">
+      <h2 class="text-3xl md:text-5xl font-bold mb-4">Frequently Asked Questions</h2>
+    </div>
+
+    <div class="space-y-4 opacity-0 translate-y-10 transition-all duration-700 reveal-element">
+      <div class="faq-item card-surface bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 rounded-2xl overflow-hidden" data-open="false">
+        <button class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-6 py-5 font-heading font-semibold">
+          <span>What platforms does Scapes support?</span>
+          <svg class="faq-icon w-5 h-5 shrink-0 text-scapes-light-primary dark:text-scapes-dark-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+        <div class="faq-answer px-6"><div class="pb-5 opacity-80 leading-relaxed">Scapes is currently available for Windows desktop and Android mobile, with wallpapers curated from top creators and third-party providers.</div></div>
+      </div>
+
+      <div class="faq-item card-surface bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 rounded-2xl overflow-hidden" data-open="false">
+        <button class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-6 py-5 font-heading font-semibold">
+          <span>Where do the wallpapers come from?</span>
+          <svg class="faq-icon w-5 h-5 shrink-0 text-scapes-light-primary dark:text-scapes-dark-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+        <div class="faq-answer px-6"><div class="pb-5 opacity-80 leading-relaxed">From our community of contributors as well as third-party providers such as Pexels, Unsplash, and Pixabay.</div></div>
+      </div>
+
+      <div class="faq-item card-surface bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 rounded-2xl overflow-hidden" data-open="false">
+        <button class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-6 py-5 font-heading font-semibold">
+          <span>Can I contribute my own wallpapers?</span>
+          <svg class="faq-icon w-5 h-5 shrink-0 text-scapes-light-primary dark:text-scapes-dark-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+        <div class="faq-answer px-6"><div class="pb-5 opacity-80 leading-relaxed">Yes — join the <a href="https://contributor.scapes.my.id" class="text-scapes-light-primary dark:text-scapes-dark-primary underline underline-offset-2">Scapes Contributor platform</a> to upload, manage, and track your submissions.</div></div>
+      </div>
+
+      <div class="faq-item card-surface bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 rounded-2xl overflow-hidden" data-open="false">
+        <button class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-6 py-5 font-heading font-semibold">
+          <span>Is my data safe?</span>
+          <svg class="faq-icon w-5 h-5 shrink-0 text-scapes-light-primary dark:text-scapes-dark-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+        <div class="faq-answer px-6"><div class="pb-5 opacity-80 leading-relaxed">We use secure authentication, and encrypted communication where supported. Read our <a href="privacy-policy/" class="text-scapes-light-primary dark:text-scapes-dark-primary underline underline-offset-2">Privacy Policy</a> for full details.</div></div>
+      </div>
+
+      <div class="faq-item card-surface bg-scapes-light-base/50 dark:bg-scapes-dark-base/50 border border-scapes-light-accent/30 dark:border-scapes-dark-accent/20 rounded-2xl overflow-hidden" data-open="false">
+        <button class="faq-toggle w-full flex items-center justify-between gap-4 text-left px-6 py-5 font-heading font-semibold">
+          <span>How do I download and apply a wallpaper?</span>
+          <svg class="faq-icon w-5 h-5 shrink-0 text-scapes-light-primary dark:text-scapes-dark-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+        <div class="faq-answer px-6"><div class="pb-5 opacity-80 leading-relaxed">Browse or search inside the app, then apply any wallpaper to your desktop or mobile in one click — no manual saving required.</div></div>
       </div>
     </div>
   </section>
@@ -141,13 +266,13 @@
   <section class="py-24 px-6 max-w-5xl mx-auto">
     <div class="glass-panel p-10 md:p-16 rounded-3xl text-center relative overflow-hidden opacity-0 translate-y-10 transition-all duration-700 reveal-element bg-white/40 dark:bg-black/40">
       <!-- Decorative background -->
-      <div class="absolute -top-24 -right-24 w-48 h-48 bg-scapes-light-accent dark:bg-scapes-dark-accent rounded-full blur-3xl opacity-50"></div>
-      <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-scapes-light-primary dark:bg-scapes-dark-primary rounded-full blur-3xl opacity-50"></div>
-      
+      <div class="orb -top-24 -right-24 w-48 h-48 bg-scapes-light-accent dark:bg-scapes-dark-accent opacity-50 animate-float-slow"></div>
+      <div class="orb -bottom-24 -left-24 w-48 h-48 bg-scapes-light-primary dark:bg-scapes-dark-primary opacity-50 animate-float"></div>
+
       <div class="relative z-10">
         <h2 class="text-3xl md:text-5xl font-bold mb-6">Are you a Creator?</h2>
-        <p class="text-lg md:text-xl opacity-80 mb-10 max-w-2xl mx-auto">Join the Scapes Contributor Platform. Upload your art, track its moderation status, and share your masterpiece with thousands of users worldwide.</p>
-        <a href="https://contributor.scapes.my.id" class="inline-block px-8 py-4 bg-scapes-light-primary dark:bg-scapes-dark-primary text-white font-semibold rounded-xl hover:bg-scapes-light-secondary dark:hover:bg-scapes-dark-secondary transition-transform duration-300 shadow-lg transform hover:-translate-y-1">
+        <p class="text-lg md:text-xl opacity-80 mb-10 max-w-2xl mx-auto">Join the Scapes Contributor platform. Share your masterpiece with thousands of users worldwide.</p>
+        <a href="https://contributor.scapes.my.id" class="btn-shine inline-block px-8 py-4 bg-scapes-light-primary dark:bg-scapes-dark-primary text-white font-semibold rounded-xl hover:bg-scapes-light-secondary dark:hover:bg-scapes-dark-secondary transition-all duration-300 shadow-lg transform hover:-translate-y-1">
           Join as Contributor
         </a>
       </div>
@@ -162,14 +287,19 @@
         <img src="assets/logo/scapes_light.png" alt="Scapes Logo" class="h-8 md:h-10 block dark:hidden">
       </div>
       <div class="text-sm opacity-80">
-        &copy; 2026 Scapes. Program Studi Informatika, Universitas Sebelas Maret.
+        &copy; 2026 Scapes. All rights reserved.
       </div>
       <div class="flex gap-6">
-        <a href="#" class="text-sm opacity-80 hover:opacity-100 transition-opacity">Privacy Policy</a>
-        <a href="#" class="text-sm opacity-80 hover:opacity-100 transition-opacity">Terms of Service</a>
+        <a href="privacy-policy/" class="nav-link text-sm opacity-80 hover:opacity-100 transition-opacity">Privacy Policy</a>
+        <a href="terms-of-service/" class="nav-link text-sm opacity-80 hover:opacity-100 transition-opacity">Terms of Service</a>
       </div>
     </div>
   </footer>
+
+  <!-- Back to top -->
+  <button id="backToTop" class="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full glass-panel flex items-center justify-center text-scapes-light-primary dark:text-scapes-dark-primary opacity-0 pointer-events-none translate-y-4 transition-all duration-300" aria-label="Back to top">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+  </button>
 
   <script src="scripts/main.js"></script>
 </body>

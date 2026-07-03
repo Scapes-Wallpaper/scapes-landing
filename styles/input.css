@@ -1,8 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
+
+/* Theme-toggle icon visibility, kept as plain unlayered CSS on purpose:
+   Tailwind's utilities live inside `@layer utilities`, and per the CSS
+   cascade-layers spec, ANY unlayered rule beats a layered one regardless
+   of specificity or stylesheet order. Font Awesome's own CSS is unlayered
+   and sets `display: inline-block` on .fa-solid, so `hidden`/`dark:block`
+   utilities alone can never override it — this has to be unlayered too. */
+#themeToggle .fa-sun {
+  display: inline-block;
+}
+#themeToggle .fa-moon {
+  display: none;
+}
+.dark #themeToggle .fa-sun {
+  display: none;
+}
+.dark #themeToggle .fa-moon {
+  display: inline-block;
+}
 
 @theme {
   --color-scapes-light-base: #f8f8ef;
@@ -10,7 +29,7 @@
   --color-scapes-light-secondary: #0d6271;
   --color-scapes-light-accent: #70c3c6;
   --color-scapes-light-highlight: #f9c52e;
-  
+
   --color-scapes-dark-base: #0f0f0f;
   --color-scapes-dark-primary: #2bb4c1;
   --color-scapes-dark-secondary: #1fa6b3;
@@ -20,9 +39,13 @@
   --font-heading: "Plus Jakarta Sans", sans-serif;
   --font-body: "Inter", sans-serif;
 
-  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-fade-in: fadeIn 0.6s ease-in-out;
   --animate-slide-up: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-pan-image: panImage 20s ease-in-out infinite alternate;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-gradient-mesh: gradientMesh 16s ease infinite;
+  --animate-spin-slow: spin 14s linear infinite;
 
   @keyframes fadeIn {
     0% { opacity: 0; }
@@ -36,6 +59,14 @@
     0% { transform: scale(1) translate(0, 0); }
     100% { transform: scale(1.1) translate(-2%, -2%); }
   }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-18px) translateX(6px); }
+  }
+  @keyframes gradientMesh {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
 }
 
 @layer base {
@@ -45,7 +76,9 @@
     --color-secondary: var(--color-scapes-light-secondary);
     --color-accent: var(--color-scapes-light-accent);
     --color-highlight: var(--color-scapes-light-highlight);
-    --color-text-body: #333333;
+    --color-text-body: #33383a;
+    --color-surface: #ffffff;
+    --glow-primary: rgba(19, 117, 134, 0.35);
   }
 
   .dark {
@@ -54,7 +87,13 @@
     --color-secondary: var(--color-scapes-dark-secondary);
     --color-accent: var(--color-scapes-dark-accent);
     --color-highlight: var(--color-scapes-dark-highlight);
-    --color-text-body: #e5e5e5;
+    --color-text-body: #e7e7e7;
+    --color-surface: #17181a;
+    --glow-primary: rgba(43, 180, 193, 0.35);
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
@@ -68,24 +107,208 @@
     font-weight: 700;
     color: var(--color-primary);
   }
+
+  section[id] {
+    scroll-margin-top: 6rem;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer utilities {
   .glass-panel {
     background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
   }
-  
+
   .dark .glass-panel {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(15, 15, 15, 0.65);
     border-color: rgba(255, 255, 255, 0.1);
   }
-  
+
   .text-gradient {
     background-clip: text;
+    -webkit-background-clip: text;
     color: transparent;
+    background-image: linear-gradient(to right, var(--color-primary), var(--color-accent), var(--color-highlight));
+  }
+
+  /* Smooth, theme-aware transitions across the whole page */
+  .theme-transition {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  /* Animated gradient mesh — used as the hero fallback background before the
+     live wallpaper carousel is available (blocked by CORS outside production). */
+  .gradient-mesh {
+    background: linear-gradient(120deg, var(--color-scapes-dark-secondary), #0a2540, var(--color-scapes-dark-accent), #05161c);
+    background-size: 300% 300%;
+    animation: gradientMesh 16s ease infinite;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(70px);
+    pointer-events: none;
+  }
+
+  .card-surface {
+    background-color: var(--color-surface);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.4s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-6px);
+  }
+
+  .icon-badge {
+    background-image: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    box-shadow: 0 8px 20px -6px var(--glow-primary);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-hover:hover .icon-badge {
+    transform: scale(1.1) rotate(-4deg);
+  }
+
+  /* Underline-on-hover nav links */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    border-radius: 9999px;
     background-image: linear-gradient(to right, var(--color-primary), var(--color-accent));
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Primary CTA shine sweep */
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-shine::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.75s ease;
+  }
+  .btn-shine:hover::before {
+    left: 125%;
+  }
+
+  .step-connector {
+    background-image: linear-gradient(to right, transparent, var(--color-accent), transparent);
+  }
+
+  /* FAQ accordion — max-height is set inline by JS (from scrollHeight) when
+     opened, so the collapse/expand animates reliably regardless of content
+     size or browser support for the CSS grid-rows collapse trick. */
+  .faq-item .faq-icon {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .faq-item[data-open="true"] .faq-icon {
+    transform: rotate(45deg);
+  }
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Mobile nav sheet */
+  #mobileMenu {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #mobileMenu.open {
+    grid-template-rows: 1fr;
+  }
+  #mobileMenu > div {
+    overflow: hidden;
+  }
+
+  .bg-dot-grid {
+    background-image: radial-gradient(var(--color-accent) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Long-form legal content typography */
+  .legal-content h2 {
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+  }
+  .legal-content h2:first-child {
+    margin-top: 0;
+  }
+  .legal-content h3 {
+    font-size: 1.125rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-body);
+  }
+  .legal-content p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    opacity: 0.85;
+  }
+  .legal-content ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+    opacity: 0.85;
+  }
+  .legal-content li {
+    margin-bottom: 0.35rem;
+  }
+  .legal-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .dark .legal-content a {
+    color: var(--color-accent);
+  }
+  .legal-content strong {
+    color: var(--color-text-body);
+    opacity: 1;
   }
 }

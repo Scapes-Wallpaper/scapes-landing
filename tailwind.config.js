@@ -3,6 +3,8 @@ module.exports = {
   darkMode: 'class', // Enable dark mode using class
   content: [
     "./index.html",
+    "./privacy-policy/**/*.html",
+    "./terms-of-service/**/*.html",
     "./scripts/**/*.js"
   ],
   theme: {

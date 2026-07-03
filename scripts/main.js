@@ -4,7 +4,7 @@
  */
 
 $(document).ready(function() {
-  
+
   // 1. Theme Toggle Management
   const themeToggleBtn = $('#themeToggle');
   const htmlElement = $('html');
@@ -62,32 +62,81 @@ $(document).ready(function() {
       $('#navbar').removeClass('bg-white/80 dark:bg-black/80 shadow-lg');
       $('#navbar').addClass('mt-0 md:mt-2');
     }
+
+    const backToTop = $('#backToTop');
+    if ($(window).scrollTop() > 400) {
+      backToTop.removeClass('opacity-0 pointer-events-none translate-y-4');
+    } else {
+      backToTop.addClass('opacity-0 pointer-events-none translate-y-4');
+    }
   });
 
-  // 4. Background Wallpaper Carousel from API
+  // 4. Back to top
+  $('#backToTop').on('click', function() {
+    $('html, body').animate({ scrollTop: 0 }, 500);
+  });
+
+  // 5. Mobile menu toggle
+  const mobileMenu = $('#mobileMenu');
+  const mobileMenuToggle = $('#mobileMenuToggle');
+
+  mobileMenuToggle.on('click', function() {
+    const isOpen = mobileMenu.hasClass('open');
+    mobileMenu.toggleClass('open', !isOpen);
+    $('#menuIconOpen').toggleClass('hidden', !isOpen);
+    $('#menuIconClose').toggleClass('hidden', isOpen);
+    mobileMenuToggle.attr('aria-expanded', String(!isOpen));
+  });
+
+  mobileMenu.find('a').on('click', function() {
+    mobileMenu.removeClass('open');
+    $('#menuIconOpen').removeClass('hidden');
+    $('#menuIconClose').addClass('hidden');
+    mobileMenuToggle.attr('aria-expanded', 'false');
+  });
+
+  // 6. FAQ accordion
+  $('.faq-toggle').on('click', function() {
+    const item = $(this).closest('.faq-item');
+    const answer = item.find('.faq-answer');
+    const isOpen = item.attr('data-open') === 'true';
+
+    if (isOpen) {
+      answer.css('max-height', 0);
+    } else {
+      answer.css('max-height', answer.prop('scrollHeight') + 'px');
+    }
+    item.attr('data-open', String(!isOpen));
+  });
+
+  // 7. Background Wallpaper Carousel from API
+  // Live on scapes.my.id only — cross-origin requests from any other host
+  // (including this file opened locally) are blocked by the API's CORS policy,
+  // so the animated gradient-mesh defined in CSS is used as the fallback.
   const API_URL = 'https://scapes.my.id/wallpapers?per_page=10&sort_by=published_at&order=desc';
   const carouselContainer = $('#hero-bg-carousel');
 
   async function fetchWallpapers() {
+    if (carouselContainer.length === 0) return;
     try {
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error('API request failed');
       const result = await response.json();
-      
+
       if (result.success && result.data && result.data.length > 0) {
         initCarousel(result.data);
       }
     } catch (error) {
-      console.error('Failed to fetch wallpapers for carousel:', error);
-      // Fallback is just the CSS gradient defined in HTML
+      console.warn('Wallpaper carousel unavailable (likely CORS on this origin), using fallback background.', error);
     }
   }
 
   function initCarousel(wallpapers) {
     if (wallpapers.length === 0) return;
 
+    carouselContainer.removeClass('gradient-mesh');
     let currentIndex = 0;
-    
+
     // Create image elements for carousel
     const images = wallpapers.map((wp, index) => {
       const img = $('<img>', {
